@@ -5,14 +5,14 @@
 
 This repository contains a simple web crawler implemented in Java. The crawler is designed to explore and list all the pages within a given domain, ensuring that external links are not followed. It efficiently handles the task of navigating through web pages, identifying links, and maintaining a record of visited URLs. This project was developed as part of a technical assessment for a Full-stack Developer role at Sedna.
 
-To ground my knowledge and to understand best practice and modern use cases on this topic I will be reading foundational papers and online resources: 
+To ground my knowledge and to understand best practice and modern use cases on this topic, I will be reading foundational papers and online resources:
 
-- Focused crawling (Chakrabarti, van den Berg, Dom )
-- The anatomy of a large-scale hypertextual Web search engine (Brin, Page)
+- Brin, S. and Page, L., 1998. The Anatomy of a Large-Scale Hypertextual Web Search Engine. Computer Networks and ISDN Systems, 30(1-7), pp.107-117. Available at: https://infolab.stanford.edu/~backrub/google.html
+- Chakrabarti, S., Van den Berg, M. and Dom, B., 1999. Focused Crawling: A New Approach to Topic-Specific Web Resource Discovery. Computer Networks, 31(11-16), pp.1623-1640. Available at: https://dl.acm.org/doi/10.1145/3307522
 - https://www.cloudflare.com/en-gb/learning/bots/what-is-a-web-crawler/
 - https://www.searchenginejournal.com/website-crawling/485275/#:~:text=A%20web%20crawler%20works%20by,links%20to%20other%20web%20pages
 
-Sedna likely wants to focus on web crawling because it plays a crucial role in how they implement email and data search within their products like Stream. Web crawlers can be used to collect and index communication data from various sources, allowing for efficient search, retrieval, and automation. 
+A strong foundation in web crawlers is key to understanding Sedna's approach to email and data search. Web crawlers are central to collecting and indexing communication data from multiple sources, enabling efficient search, retrieval, and automation within their products. 
 
 ## Features
 
