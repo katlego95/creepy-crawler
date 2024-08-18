@@ -63,7 +63,7 @@ To run the web crawler:
 3. **Compile and Run the Program:**
    ```bash
    javac CreepyCrawler.java
-   java WebCrawler
+   java CreepyCrawler
    ```
 4. The crawler will output all pages found within the specified domain.
 
