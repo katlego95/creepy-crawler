@@ -7,8 +7,8 @@ This repository contains a simple web crawler implemented in Java. The crawler i
 
 To ground my knowledge and to understand best practice and modern use cases on this topic, I will be reading foundational papers and online resources:
 
-- Brin, S. and Page, L., 1998. The Anatomy of a Large-Scale Hypertextual Web Search Engine. Computer Networks and ISDN Systems, 30(1-7), pp.107-117. Available at: https://infolab.stanford.edu/~backrub/google.html
-- Chakrabarti, S., Van den Berg, M. and Dom, B., 1999. Focused Crawling: A New Approach to Topic-Specific Web Resource Discovery. Computer Networks, 31(11-16), pp.1623-1640. Available at: https://dl.acm.org/doi/10.1145/3307522
+- Brin, S. and Page, L., 1998. The Anatomy of a Large-Scale Hypertextual Web Search Engine. Computer Networks and ISDN Systems, 30(1-7), pp.107-117. Available at: https://snap.stanford.edu/class/cs224w-readings/Brin98Anatomy.pdf
+- Chakrabarti, S., Van den Berg, M. and Dom, B., 1999. Focused Crawling: A New Approach to Topic-Specific Web Resource Discovery. Computer Networks, 31(11-16), pp.1623-1640. Available at: https://www.sciencedirect.com/science/article/abs/pii/S1389128699000523
 - https://www.cloudflare.com/en-gb/learning/bots/what-is-a-web-crawler/
 - https://www.searchenginejournal.com/website-crawling/485275/#:~:text=A%20web%20crawler%20works%20by,links%20to%20other%20web%20pages
 
