@@ -45,7 +45,7 @@ The web crawler begins at a specified start URL and recursively explores all acc
 
 ### Key Components
 
-- **WebCrawler.java**: The main class responsible for executing the crawl process. It contains methods for fetching web pages, extracting links, and tracking visited URLs.
+- **CreepyCrawler.java**: The main class responsible for executing the crawl process. It contains methods for fetching web pages, extracting links, and tracking visited URLs.
 - **Jsoup Library**: Handles the heavy lifting of HTTP requests and HTML parsing.
 
 ### Usage
