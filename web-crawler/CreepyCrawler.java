@@ -82,6 +82,7 @@ public class CreepyCrawler {
     }
 
     public static void printPages(Set<String> visitedPages) {
+        System.out.println("Crawled pages: "+ "\n");
         for (String page : visitedPages) {
             System.out.println(page);
         }
