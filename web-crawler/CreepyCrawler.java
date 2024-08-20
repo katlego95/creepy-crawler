@@ -47,7 +47,6 @@ public class CreepyCrawler {
      * @param url The URL of the page to be crawled.
      */
     private void creep(String url) {
-        System.out.print("Creeping..." + "\n");
 
         // Check if the page has been added to directory and if the url is in the domain
         if (!pages.contains(url) && url.contains(domain)) {
@@ -142,7 +141,6 @@ public class CreepyCrawler {
                                 System.out.println("Enter URL: ");
                                 String customURL = scanner.nextLine();
                                 
-
                                 try {
                                     // Create an instance of the WebCrawler and start crawling
                                     CreepyCrawler crawler = new CreepyCrawler(customURL);
