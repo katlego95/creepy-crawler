@@ -10,7 +10,7 @@ To ground my knowledge and to understand best practice and modern use cases on t
 - Brin, S. and Page, L., 1998. The Anatomy of a Large-Scale Hypertextual Web Search Engine. Computer Networks and ISDN Systems, 30(1-7), pp.107-117. Available at: https://snap.stanford.edu/class/cs224w-readings/Brin98Anatomy.pdf
 - Chakrabarti, S., Van den Berg, M. and Dom, B., 1999. Focused Crawling: A New Approach to Topic-Specific Web Resource Discovery. Computer Networks, 31(11-16), pp.1623-1640. Available at: https://www.sciencedirect.com/science/article/abs/pii/S1389128699000523
 - Cloudflare. (n.d.) What is a web crawler? Available at: https://www.cloudflare.com/en-gb/learning/bots/what-is-a-web-crawler/ (Accessed: 16 August 2024).
-- https://www.searchenginejournal.com/website-crawling/485275/#:~:text=A%20web%20crawler%20works%20by,links%20to%20other%20web%20pages
+- Bowen, G. (2023) What is website crawling & how does it work? Search Engine Journal. Available at: https://www.searchenginejournal.com/website-crawling/485275/#:~:text=A%20web%20crawler%20works%20by,links%20to%20other%20web%20pages (Accessed: 16 August 2024).
 
 A strong foundation in web crawlers is key to understanding Sedna's approach to email and data search. Web crawlers are central to collecting and indexing communication data from multiple sources, enabling efficient search, retrieval, and automation within their products. 
 
