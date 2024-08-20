@@ -1,6 +1,16 @@
 import java.util.Scanner;
 import java.util.Set;
+
+//import javax.swing.text.Document;
+
+//import org.jsoup.Jsoup;
+//import org.jsoup.nodes.Document;
+//import org.jsoup.nodes.Element;
+//import org.jsoup.select.Elements;
+
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -20,10 +30,15 @@ public class CreepyCrawler {
      * Constructor to initialize the crawler with the start URL.
      * 
      * @param startURL The starting URL from where the crawl begins.
-     * @throws IOException If an error occurs while processing the URL.
+     * @throws IOException        If an error occurs while processing the URL.
+     * @throws URISyntaxException
      */
-    public CreepyCrawler(String URL) throws IOException {
+    public CreepyCrawler(String newURL) throws IOException, URISyntaxException {
         System.out.print("Crawling..." + "\n");
+        URI uri = new URI(newURL);
+        this.domain = uri.getHost();
+        // Begin crawling from the start URL
+        creep(newURL);
     }
 
     /**
@@ -32,7 +47,19 @@ public class CreepyCrawler {
      * @param url The URL of the page to be crawled.
      */
     private void creep(String url) {
+        System.out.print("Creeping..." + "\n");
 
+        // Check if the page has been added to directory and if the url is in the domain
+        if (!pages.contains(url) && url.contains(domain)) {
+            try {
+                // Document document = Jsoup.connect(url).get();
+                pages.add(url);
+
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+
+        }
     }
 
     /**
@@ -73,7 +100,7 @@ public class CreepyCrawler {
 
                 String input = scanner.nextLine();
 
-                if (input.equals("exit")) {
+                if (input.toLowerCase().equals("exit")) {
                     // End the program
                     System.out.println("Exiting program...");
                     break;
@@ -88,7 +115,7 @@ public class CreepyCrawler {
                                     // Create an instance of the WebCrawler and start crawling
                                     CreepyCrawler crawler = new CreepyCrawler(sednaURL);
 
-                                } catch (IOException e) {
+                                } catch (IOException | URISyntaxException e) {
                                     System.err.println("Error starting the crawl: " + e.getMessage());
                                 }
                             } else {
@@ -99,7 +126,7 @@ public class CreepyCrawler {
                                     // Create an instance of the WebCrawler and start crawling
                                     CreepyCrawler crawler = new CreepyCrawler(customURL);
 
-                                } catch (IOException e) {
+                                } catch (IOException | URISyntaxException e) {
                                     System.err.println("Error starting the crawl: " + e.getMessage());
                                 }
                             }
