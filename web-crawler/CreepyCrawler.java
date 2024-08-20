@@ -1,6 +1,16 @@
 import java.util.Scanner;
 import java.util.Set;
+
+//import javax.swing.text.Document;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -20,10 +30,15 @@ public class CreepyCrawler {
      * Constructor to initialize the crawler with the start URL.
      * 
      * @param startURL The starting URL from where the crawl begins.
-     * @throws IOException If an error occurs while processing the URL.
+     * @throws IOException        If an error occurs while processing the URL.
+     * @throws URISyntaxException
      */
-    public CreepyCrawler(String URL) throws IOException {
+    public CreepyCrawler(String newURL) throws IOException, URISyntaxException {
         System.out.print("Crawling..." + "\n");
+        URI uri = new URI(newURL);
+        this.domain = uri.getHost();
+        // Begin crawling from the start URL
+        creep(newURL);
     }
 
     /**
@@ -33,6 +48,28 @@ public class CreepyCrawler {
      */
     private void creep(String url) {
 
+        // Check if the page has been added to directory and if the url is in the domain
+        if (!pages.contains(url) && url.contains(domain)) {
+            try {
+                Document document = Jsoup.connect(url).get();
+                pages.add(url);
+
+                // System.out.println("URL: " + url);
+
+                Elements links = document.select("a[href]");
+
+                for (Element link : links) {
+                    String absUrl = link.attr("abs:href");
+                    if (absUrl.contains(domain)) {
+                        creep(absUrl);
+                    }
+                }
+
+            } catch (Exception e) {
+                System.err.println("Error, cannot access: " + url);
+            }
+
+        }
     }
 
     /**
@@ -42,6 +79,13 @@ public class CreepyCrawler {
      */
     public Set<String> getVisitedPages() {
         return pages;
+    }
+
+    public static void printPages(Set<String> visitedPages) {
+        System.out.println("Crawled pages: "+ "\n");
+        for (String page : visitedPages) {
+            System.out.println(page);
+        }
     }
 
     public static void errorMessage() {
@@ -73,7 +117,7 @@ public class CreepyCrawler {
 
                 String input = scanner.nextLine();
 
-                if (input.equals("exit")) {
+                if (input.toLowerCase().equals("exit")) {
                     // End the program
                     System.out.println("Exiting program...");
                     break;
@@ -87,19 +131,25 @@ public class CreepyCrawler {
                                 try {
                                     // Create an instance of the WebCrawler and start crawling
                                     CreepyCrawler crawler = new CreepyCrawler(sednaURL);
+                                    Set<String> pages = crawler.getVisitedPages();
 
-                                } catch (IOException e) {
+                                    System.out.println("Crawling " + sednaURL);
+                                    printPages(pages);
+                                } catch (IOException | URISyntaxException e) {
                                     System.err.println("Error starting the crawl: " + e.getMessage());
                                 }
                             } else {
                                 System.out.println("Enter URL: ");
                                 String customURL = scanner.nextLine();
-
+                                
                                 try {
                                     // Create an instance of the WebCrawler and start crawling
                                     CreepyCrawler crawler = new CreepyCrawler(customURL);
+                                    Set<String> pages = crawler.getVisitedPages();
+                                    System.out.println("Crawling " + customURL);
+                                    printPages(pages);
 
-                                } catch (IOException e) {
+                                } catch (IOException | URISyntaxException e) {
                                     System.err.println("Error starting the crawl: " + e.getMessage());
                                 }
                             }
