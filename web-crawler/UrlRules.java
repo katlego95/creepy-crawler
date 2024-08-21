@@ -25,12 +25,12 @@ public class UrlRules {
      * 
      * @return True if path is valid
      */
-    public static boolean isUrlValid(URI uri) {
+    public static boolean isUrlValid(URI uri, String contentType) {
         String path = uri.getPath();
         String scheme = uri.getScheme();
 
         if (path != null && !path.isEmpty()) {
-            return checkRules(path.toLowerCase(),scheme);
+            return checkRules(path.toLowerCase(),scheme,contentType);
         } else {
             return false;
         }
@@ -42,8 +42,8 @@ public class UrlRules {
      * 
      * @return True if path has has satisfied all rules
      */
-    private static boolean checkRules(String path, String scheme) {
-        return fileExt(path) && scheme(scheme);
+    private static boolean checkRules(String path, String scheme, String contentType ) {
+        return fileExt(path) && scheme(scheme) && content(contentType);
     }
 
     private static boolean fileExt(String path) {
@@ -61,6 +61,15 @@ public class UrlRules {
             return false;
         } else {
             return true;
+        }
+    }
+
+    private static boolean content (String contentType) {
+        // Check if the content is HTML
+        if (contentType != null && contentType.contains("text/html")) {
+            return true;
+        } else {
+            return false;
         }
     }
 
