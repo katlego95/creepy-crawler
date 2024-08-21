@@ -41,14 +41,22 @@ public class RobotsTextHandler {
         connection.setRequestMethod("GET");
 
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            // Process disallowed paths for all user-agents
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     line = line.trim();
-                    // Process disallowed paths for all user-agents
+
+                    // Skip empty lines or comments
+                    if (line.isEmpty() || line.startsWith("#")) {
+                        continue;
+                    }
+
                     if (line.startsWith("Disallow:")) {
-                        String disallowedPath = line.substring(9).trim();
-                        disallowedPaths.add(disallowedPath);
+                        String path = line.substring("Disallow:".length()).trim();
+                        if (!path.isEmpty()) {
+                            disallowedPaths.add(path);
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -70,11 +78,18 @@ public class RobotsTextHandler {
             URI uri = new URI(url);
             String path = uri.getPath();
 
+            // Ensure path is not null before processing
+            if (path == null) {
+                return true; // If there's no path, assume it's allowed
+            }
+
             for (String disallowedPath : disallowedPaths) {
-                if (path.startsWith(disallowedPath)) {
-                    return false; // The URL path is disallowed by robots.txt
+                // Ensure disallowedPath is not null before calling startsWith
+                if (disallowedPath != null && path.startsWith(disallowedPath)) {
+                    return false; // URL is disallowed
                 }
             }
+
         } catch (URISyntaxException e) {
             System.err.println("Error processing the URL: " + url);
         }
