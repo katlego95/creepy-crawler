@@ -85,7 +85,7 @@ This web crawler is designed with simplicity and clarity in mind. However, it ca
 - Handle different content types
 - Implement multi-threading for faster crawling
 - Apply custom filters or processing rules on the discovered links
-- J Unit testing using sites like : https://crawler-test.com/
+- Extensive J Unit testing using sites like : https://crawler-test.com/
 
 ## Contributing
 
