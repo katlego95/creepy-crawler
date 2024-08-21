@@ -27,9 +27,10 @@ public class UrlRules {
      */
     public static boolean isUrlValid(URI uri) {
         String path = uri.getPath();
+        String scheme = uri.getScheme();
 
         if (path != null && !path.isEmpty()) {
-            return checkRules(path.toLowerCase());
+            return checkRules(path.toLowerCase(),scheme);
         } else {
             return false;
         }
@@ -41,8 +42,8 @@ public class UrlRules {
      * 
      * @return True if path has has satisfied all rules
      */
-    private static boolean checkRules(String path) {
-        return fileExt(path);
+    private static boolean checkRules(String path, String scheme) {
+        return fileExt(path) && scheme(scheme);
     }
 
     private static boolean fileExt(String path) {
@@ -53,6 +54,14 @@ public class UrlRules {
             }
         }
         return true;
+    }
+
+    private static boolean scheme (String scheme) {
+        if (scheme == null || (!scheme.equals("http") && !scheme.equals("https"))) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }
