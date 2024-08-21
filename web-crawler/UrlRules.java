@@ -24,8 +24,8 @@ public class UrlRules {
     public static boolean isUrlValid(URI uri) {
         String path = uri.getPath().toLowerCase();
 
-        if (path != null) {
-            return checkRules(path);
+        if (path != null && !path.isEmpty()) {
+            return !checkRules(path);
         } else {
             return false;
         }
@@ -38,10 +38,10 @@ public class UrlRules {
      * @return True if path has has satisfied all rules
      */
     private static boolean checkRules(String path) {
-        return isInvalidFile(path);
+        return isFileExt(path);
     }
 
-    private static boolean isInvalidFile(String path) {
+    private static boolean isFileExt(String path) {
         // URLs that match excluded file extensions are invalid
         for (String ext : EXCLUDED_EXTENSIONS) {
             if (path.endsWith(ext)) {
