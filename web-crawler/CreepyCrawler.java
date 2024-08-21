@@ -73,7 +73,7 @@ public class CreepyCrawler {
                 }
 
                 // Connect to the URL and get the response
-                Connection connection = Jsoup.connect(url);
+                Connection connection = Jsoup.connect(url).timeout(5000); //5 seconds
                 Connection.Response response = connection.execute();
 
                 // Check if the page is accessible (status code 200)
@@ -90,9 +90,9 @@ public class CreepyCrawler {
                         }
                     }
                 } else {
+                    System.err.println("Error, cannot access: " + url + " (HTTP " +
+                    response.statusCode() + ")");
                     return;
-                    // System.err.println("Error, cannot access: " + url + " (HTTP " +
-                    // response.statusCode() + ")");
                 }
             } catch (IOException | URISyntaxException e) {
                 System.err.println("Error accessing the URL: " + url);
