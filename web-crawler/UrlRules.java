@@ -22,6 +22,9 @@ public class UrlRules {
     // Error accessing the URL: https://support.sedna.com/hc/en-us
     // Error accessing the URL: mailto:info@sedna.com
     // Error accessing the URL: https://sedna.com/customer-stories/how-viterra-reduced-email-volume-by-95-with-sedna-team-collaboration-software/
+    // Error accessing the URL: https://sedna.com/integrations/
+    // Error accessing the URL: https://support.sedna.com/hc/en-us/articles/18749087827095-Analytics-Best-Practices
+    // Error accessing the URL: https://sedna.com/resources/state-of-maritime-communications
 
 
     /**
