@@ -17,7 +17,7 @@ A strong foundation in web crawlers is key to understanding Sedna's approach to 
 ## Features
 
 - **Domain-Limited Crawling:** The crawler restricts its exploration to the specified domain, preventing any external links from being followed.
-- **Efficient Link Tracking:** Utilizes a `Set` to ensure each page within the domain is only visited once, optimizing the crawling process.
+- **Link Tracking:** Utilizes a `Set` to ensure each page within the domain is only visited once, optimizing the crawling process.
 - **Flexible and Extensible:** Built with simplicity in mind, this crawler can be easily extended to support additional features or configurations as needed.
 
 ## Requirements
@@ -62,7 +62,7 @@ To run the web crawler:
    ```
 3. **Compile and Run the Program:**
    ```bash
-   javac CreepyCrawler.java
+   javac CreepyCrawler.java RobotsTextHandler.java UrlRules.java
    java CreepyCrawler
    ```
 4. The crawler will output all pages found within the specified domain.
@@ -83,9 +83,9 @@ https://www.sedna.com/contact
 
 This web crawler is designed with simplicity and clarity in mind. However, it can be easily customized to:
 - Handle different content types
-- Respect `robots.txt` rules
 - Implement multi-threading for faster crawling
 - Apply custom filters or processing rules on the discovered links
+- J Unit testing using sites like : https://crawler-test.com/
 
 ## Contributing
 
