@@ -31,11 +31,8 @@ public class CreepyCrawler {
     // robots.txt handler object
     private RobotsTextHandler roboTxtHandler;
 
-    // List of file extensions to exclude from crawling
-    private static final Set<String> EXCLUDED_EXTENSIONS = Set.of(
-            ".pdf", ".jpg", ".jpeg", ".png", ".gif", ".bmp",
-            ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx",
-            ".mp4", ".avi", ".mkv", ".mov", ".zip", ".rar");
+    //
+    private UrlRules urlRulesCheck;
 
     /**
      * Constructor to initialize the crawler with the start URL.
@@ -71,8 +68,12 @@ public class CreepyCrawler {
                 // Parse the URL to check its scheme
                 URI uri = new URI(url);
 
+                if (!UrlRules.isUrlValid(uri)) {
+                    return;
+                }
+
                 // Connect to the URL and get the response
-                Connection connection = Jsoup.connect(url);
+                Connection connection = Jsoup.connect(url).timeout(5000); //5 seconds
                 Connection.Response response = connection.execute();
 
                 // Check if the page is accessible (status code 200)
@@ -89,9 +90,9 @@ public class CreepyCrawler {
                         }
                     }
                 } else {
+                    System.err.println("Error, cannot access: " + url + " (HTTP " +
+                    response.statusCode() + ")");
                     return;
-                    // System.err.println("Error, cannot access: " + url + " (HTTP " +
-                    // response.statusCode() + ")");
                 }
             } catch (IOException | URISyntaxException e) {
                 System.err.println("Error accessing the URL: " + url);
