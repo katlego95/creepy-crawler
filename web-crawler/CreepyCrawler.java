@@ -70,22 +70,7 @@ public class CreepyCrawler {
 
                 // Parse the URL to check its scheme
                 URI uri = new URI(url);
-                String scheme = uri.getScheme();
-                String path = uri.getPath().toLowerCase();
-
-                // Skip URLs that match excluded file extensions
-                for (String ext : EXCLUDED_EXTENSIONS) {
-                    if (path.endsWith(ext)) {
-                        // System.out.println("Skipping file URL: " + url);
-                        return;
-                    }
-                }
-
-                // Skip URLs with the 'file' scheme or other invalid schemes
-                if (scheme == null || (!scheme.equals("http") && !scheme.equals("https"))) {
-                    // System.err.println("Skipping invalid URL: " + url);
-                    return;
-                }
+                //String path = uri.getPath().toLowerCase();
 
                 // Connect to the URL and get the response
                 Connection connection = Jsoup.connect(url);
