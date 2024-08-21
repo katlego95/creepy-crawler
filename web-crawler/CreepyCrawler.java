@@ -54,7 +54,7 @@ public class CreepyCrawler {
                 Document document = Jsoup.connect(url).get();
                 pages.add(url);
 
-                // System.out.println("URL: " + url);
+                System.out.println("URL: " + url);
 
                 Elements links = document.select("a[href]");
 
