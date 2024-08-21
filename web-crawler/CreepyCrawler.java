@@ -26,6 +26,9 @@ public class CreepyCrawler {
     // The domain of the website to be crawled
     private String domain;
 
+    // robots.txt handler object
+    private RobotsTextHandler roboTxtHandler;
+
     /**
      * Constructor to initialize the crawler with the start URL.
      * 
@@ -34,22 +37,26 @@ public class CreepyCrawler {
      * @throws URISyntaxException
      */
     public CreepyCrawler(String newURL) throws IOException, URISyntaxException {
-        System.out.print("Crawling..." + "\n");
+        System.out.print("Creeping..." + "\n");
         URI uri = new URI(newURL);
         this.domain = uri.getHost();
-        // Begin crawling from the start URL
+
+        // Initialize the RobotsTxtHandler for the domain
+        this.roboTxtHandler = new RobotsTextHandler(this.domain);
+
+        // Initialize the creeping from the start URL
         creep(newURL);
     }
 
     /**
-     * The main method that handles the crawling process.
+     * The main method that handles the creeping process.
      * 
-     * @param url The URL of the page to be crawled.
+     * @param url The URL of the page to be creeped.
      */
     private void creep(String url) {
 
-        // Check if the page has been added to directory and if the url is in the domain
-        if (!pages.contains(url) && url.contains(domain)) {
+        // Check if the page is allowed, if the page has been added to directory and if the url is in the domain
+        if (this.roboTxtHandler.isUrlAllowed(url) && !pages.contains(url) && url.contains(domain)) {
             try {
                 Document document = Jsoup.connect(url).get();
                 pages.add(url);
