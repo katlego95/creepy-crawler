@@ -3,8 +3,6 @@ import java.util.Set;
 
 import org.jsoup.Connection;
 
-//import javax.swing.text.Document;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -64,7 +62,8 @@ public class CreepyCrawler {
      */
     private void creep(String url) {
 
-        // Check if the page is allowed, if the page has been added to directory, and if the url is in the domain
+        // Check if the page is allowed, if the page has been added to directory, and if
+        // the url is in the domain
         if (this.roboTxtHandler.isUrlAllowed(url) && !pages.contains(url) && url.contains(domain)) {
             try {
 
@@ -75,17 +74,16 @@ public class CreepyCrawler {
                 }
 
                 // Connect to the URL and get the response
-                Connection connection = Jsoup.connect(url).timeout(5000); //5 seconds
+                Connection connection = Jsoup.connect(url).timeout(5000); // 5 seconds
                 Connection.Response response = connection.execute();
 
                 // Check to make sure url passes all rules
-
 
                 // Check if the page is accessible (status code 200)
                 if (response.statusCode() == 200) {
                     Document document = connection.get();
                     pages.add(url);
-                    //System.out.println("URL: " + url);
+                    // System.out.println("URL: " + url);
 
                     Elements links = document.select("a[href]");
                     for (Element link : links) {
@@ -96,7 +94,7 @@ public class CreepyCrawler {
                     }
                 } else {
                     System.err.println("Error, cannot access: " + url + " (HTTP " +
-                    response.statusCode() + ")");
+                            response.statusCode() + ")");
                     return;
                 }
             } catch (IOException | URISyntaxException e) {
@@ -166,14 +164,13 @@ public class CreepyCrawler {
                                     CreepyCrawler crawler = new CreepyCrawler(sednaURL);
                                     Set<String> pages = crawler.getVisitedPages();
 
-                                    InvertedIndex index = new InvertedIndex();
-                                    index.indexVisitedPages(pages);
-                                 
+                                    // InvertedIndex index = new InvertedIndex();
+                                    // index.indexVisitedPages(pages);
 
                                     System.out.println("Crawling " + sednaURL);
                                     printPages(pages);
-                                    System.out.println("Index of " + sednaURL);
-                                    index.printIndex();
+                                    // System.out.println("Index of " + sednaURL);
+                                    // index.printIndex();
                                 } catch (IOException | URISyntaxException e) {
                                     System.err.println("Error starting the crawl: " + e.getMessage());
                                 }
