@@ -1,6 +1,7 @@
 import java.net.URI;
 import java.util.Set;
 
+
 /**
  * Handle checking whether a given url is valid
  * based on predefined rules
@@ -19,18 +20,20 @@ public class UrlRules {
     // TO DO:
     // creature rule to skip
     // Error accessing the URL: https://support.sedna.com/hc/en-us
+    // Error accessing the URL: mailto:info@sedna.com
+
 
     /**
      * Checks given the path for validity
      * 
      * @return True if path is valid
      */
-    public static boolean isUrlValid(URI uri, String contentType) {
+    public static boolean isUrlValid(URI uri) {
         String path = uri.getPath();
         String scheme = uri.getScheme();
 
         if (path != null && !path.isEmpty()) {
-            return checkRules(path.toLowerCase(),scheme,contentType);
+            return checkRules(path.toLowerCase(),scheme);
         } else {
             return false;
         }
@@ -42,8 +45,8 @@ public class UrlRules {
      * 
      * @return True if path has has satisfied all rules
      */
-    private static boolean checkRules(String path, String scheme, String contentType ) {
-        return fileExt(path) && scheme(scheme) && content(contentType);
+    private static boolean checkRules(String path, String scheme ) {
+        return fileExt(path) && scheme(scheme);
     }
 
     private static boolean fileExt(String path) {

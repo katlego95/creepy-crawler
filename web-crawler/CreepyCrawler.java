@@ -63,16 +63,16 @@ public class CreepyCrawler {
 
                 URI uri = new URI(url);
 
-
+                if (!UrlRules.isUrlValid(uri)) {
+                    return;
+                }
 
                 // Connect to the URL and get the response
                 Connection connection = Jsoup.connect(url).timeout(5000); //5 seconds
                 Connection.Response response = connection.execute();
 
                 // Check to make sure url passes all rules
-                if (!UrlRules.isUrlValid(uri,response.contentType())) {
-                    return;
-                }
+
 
                 // Check if the page is accessible (status code 200)
                 if (response.statusCode() == 200) {
