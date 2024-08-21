@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CountDownLatch;
 
 public class CreepyCrawler {
 
@@ -39,6 +40,9 @@ public class CreepyCrawler {
     // robots.txt handler object
     private static RobotsTextHandler roboTxtHandler;
 
+    // A CountDownLatch to track the completion of tasks
+    private CountDownLatch latch;
+
     /**
      * Constructor to initialize the crawler with the start URL.
      * 
@@ -56,7 +60,13 @@ public class CreepyCrawler {
         this.executorService = Executors.newFixedThreadPool(10);
 
         // Initialize the RobotsTxtHandler for the domain
+        // Initialize with a dummy value; will be set dynamically
+        this.latch = new CountDownLatch(1);
+
+        // Initialize the RobotsTxtHandler for the domain
+        System.out.println("Robot.txt for " + sednaURL);
         CreepyCrawler.roboTxtHandler = new RobotsTextHandler(this.domain);
+        System.out.println("Robot.txt for " + sednaURL + "Done");
     }
 
     /**
@@ -66,10 +76,20 @@ public class CreepyCrawler {
      * @param startUrl The starting URL for the crawl.
      */
     public void crawl(String startUrl, RobotsTextHandler robotxt) {
+
+        System.out.println("Submit task: ");
         submitTask(startUrl, robotxt);
 
-        // Shutdown the executor service after all tasks are completed
-        shutdownAndAwaitTermination();
+        try {
+            // Wait until all tasks are completed
+            latch.await();
+            System.out.println("All tasks completed.");
+        } catch (InterruptedException e) {
+            System.err.println("Crawling was interrupted: " + e.getMessage());
+        } finally {
+            // Shutdown the executor service after all tasks are completed
+            shutdownAndAwaitTermination();
+        }
     }
 
     /**
@@ -79,6 +99,7 @@ public class CreepyCrawler {
      * @param url The URL to crawl.
      */
     private void submitTask(String url, RobotsTextHandler robotxt) {
+        latch = new CountDownLatch((int) (latch.getCount() + 1));
         executorService.submit(new CrawlTask(url, robotxt));
     }
 
@@ -132,7 +153,7 @@ public class CreepyCrawler {
                     if (response.statusCode() == 200) {
                         Document document = connection.get();
                         pages.add(url);
-                        // System.out.println("URL: " + url);
+                        System.out.println("URL: " + url);
 
                         Elements links = document.select("a[href]");
                         for (Element link : links) {
@@ -215,13 +236,12 @@ public class CreepyCrawler {
                                     // Create an instance of the WebCrawler and start crawling
                                     CreepyCrawler crawler = new CreepyCrawler(sednaURL);
                                     crawler.crawl(sednaURL, roboTxtHandler);
-                                    Set<String> pages = crawler.getVisitedPages();
 
                                     // InvertedIndex index = new InvertedIndex();
                                     // index.indexVisitedPages(pages);
 
                                     System.out.println("Crawling " + sednaURL);
-                                    printPages(pages);
+                                    printPages(crawler.getVisitedPages());
                                     // System.out.println("Index of " + sednaURL);
                                     // index.printIndex();
                                 } catch (IOException | URISyntaxException e) {
