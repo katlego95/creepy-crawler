@@ -12,15 +12,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
+
 /* 
 / for Multithreading
+*/
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-*/
 
 public class CreepyCrawler {
 
@@ -28,13 +28,16 @@ public class CreepyCrawler {
     private static final String sednaURL = "https://sedna.com/";
 
     // A set to keep track of visited pages to avoid duplicate visits
-    private Set<String> pages = new HashSet<>();
+    private Set<String> pages;
 
     // The domain of the website to be crawled
     private String domain;
 
+    // ExecutorService to manage a pool of threads
+    private ExecutorService executorService;
+
     // robots.txt handler object
-    private RobotsTextHandler roboTxtHandler;
+    private static RobotsTextHandler roboTxtHandler;
 
     /**
      * Constructor to initialize the crawler with the start URL.
@@ -48,58 +51,107 @@ public class CreepyCrawler {
         URI uri = new URI(newURL);
         this.domain = uri.getHost();
 
-        // Initialize the RobotsTxtHandler for the domain
-        this.roboTxtHandler = new RobotsTextHandler(this.domain);
+        // Initialize the thread-safe set and the thread pool
+        this.pages = ConcurrentHashMap.newKeySet();
+        this.executorService = Executors.newFixedThreadPool(10);
 
-        // Initialize the creeping from the start URL
-        creep(newURL);
+        // Initialize the RobotsTxtHandler for the domain
+        CreepyCrawler.roboTxtHandler = new RobotsTextHandler(this.domain);
     }
 
     /**
-     * The main method that handles the creeping process.
-     * 
-     * @param url The URL of the page to be creeped.
+     * Starts the crawling process from a given URL.
+     * This method adds the initial URL to the task queue and begins processing.
+     *
+     * @param startUrl The starting URL for the crawl.
      */
-    private void creep(String url) {
+    public void crawl(String startUrl, RobotsTextHandler robotxt) {
+        submitTask(startUrl, robotxt);
 
-        // Check if the page is allowed, if the page has been added to directory, and if
-        // the url is in the domain
-        if (this.roboTxtHandler.isUrlAllowed(url) && !pages.contains(url) && url.contains(domain)) {
-            try {
+        // Shutdown the executor service after all tasks are completed
+        shutdownAndAwaitTermination();
+    }
 
-                URI uri = new URI(url);
+    /**
+     * Submits a new crawl task to the executor service.
+     * The task fetches and processes the given URL.
+     *
+     * @param url The URL to crawl.
+     */
+    private void submitTask(String url, RobotsTextHandler robotxt) {
+        executorService.submit(new CrawlTask(url, robotxt));
+    }
 
-                if (!UrlRules.isUrlValid(uri)) {
-                    return;
-                }
-
-                // Connect to the URL and get the response
-                Connection connection = Jsoup.connect(url).timeout(5000); // 5 seconds
-                Connection.Response response = connection.execute();
-
-                // Check to make sure url passes all rules
-
-                // Check if the page is accessible (status code 200)
-                if (response.statusCode() == 200) {
-                    Document document = connection.get();
-                    pages.add(url);
-                    // System.out.println("URL: " + url);
-
-                    Elements links = document.select("a[href]");
-                    for (Element link : links) {
-                        String absUrl = link.attr("abs:href");
-                        if (absUrl.contains(domain)) {
-                            creep(absUrl);
-                        }
-                    }
-                } else {
-                    System.err.println("Error, cannot access: " + url + " (HTTP " +
-                            response.statusCode() + ")");
-                    return;
-                }
-            } catch (IOException | URISyntaxException e) {
-                System.err.println("Error accessing the URL: " + url);
+    /**
+     * shuts down the executor service, waiting for all tasks to
+     * complete.
+     */
+    private void shutdownAndAwaitTermination() {
+        executorService.shutdown();
+        try {
+            if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+                executorService.shutdownNow();
             }
+        } catch (InterruptedException e) {
+            executorService.shutdownNow();
+        }
+    }
+
+    /**
+     * The task that handles crawling a single URL.
+     * Implements Runnable to be executed by the ExecutorService.
+     */
+    private class CrawlTask implements Runnable {
+        private String url;
+        private RobotsTextHandler robotxt;
+
+        public CrawlTask(String url, RobotsTextHandler robotxt) {
+            this.url = url;
+            this.robotxt = robotxt;
+        }
+
+        @Override
+        public void run() {
+
+            if (robotxt.isUrlAllowed(url) && !pages.contains(url) && url.contains(domain)) {
+                try {
+
+                    URI uri = new URI(url);
+
+                    if (!UrlRules.isUrlValid(uri)) {
+                        return;
+                    }
+
+                    // Connect to the URL and get the response
+                    Connection connection = Jsoup.connect(url).timeout(5000); // 5 seconds
+                    Connection.Response response = connection.execute();
+
+                    // Check to make sure url passes all rules
+
+                    // Check if the page is accessible (status code 200)
+                    if (response.statusCode() == 200) {
+                        Document document = connection.get();
+                        pages.add(url);
+                        // System.out.println("URL: " + url);
+
+                        Elements links = document.select("a[href]");
+                        for (Element link : links) {
+                            String absUrl = link.attr("abs:href");
+                            if (absUrl.contains(domain)) {
+                                submitTask(absUrl, robotxt);
+                            }
+                        }
+                    } else {
+                        System.err.println("Error, cannot access: " + url + " (HTTP " +
+                                response.statusCode() + ")");
+                        return;
+                    }
+                } catch (IOException | URISyntaxException e) {
+                    System.err.println("Error accessing the URL: " + url);
+                }
+
+            }
+
         }
     }
 
@@ -162,6 +214,7 @@ public class CreepyCrawler {
                                 try {
                                     // Create an instance of the WebCrawler and start crawling
                                     CreepyCrawler crawler = new CreepyCrawler(sednaURL);
+                                    crawler.crawl(sednaURL, roboTxtHandler);
                                     Set<String> pages = crawler.getVisitedPages();
 
                                     // InvertedIndex index = new InvertedIndex();
