@@ -31,9 +31,6 @@ public class CreepyCrawler {
     // robots.txt handler object
     private RobotsTextHandler roboTxtHandler;
 
-    //
-    private UrlRules urlRulesCheck;
-
     /**
      * Constructor to initialize the crawler with the start URL.
      * 
