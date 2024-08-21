@@ -22,10 +22,10 @@ public class UrlRules {
      * @return True if path is valid
      */
     public static boolean isUrlValid(URI uri) {
-        String path = uri.getPath().toLowerCase();
+        String path = uri.getPath();
 
         if (path != null && !path.isEmpty()) {
-            return !checkRules(path);
+            return !checkRules(path.toLowerCase());
         } else {
             return false;
         }
