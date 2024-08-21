@@ -78,7 +78,7 @@ public class CreepyCrawler {
                 if (response.statusCode() == 200) {
                     Document document = connection.get();
                     pages.add(url);
-                    System.out.println("URL: " + url);
+                    //System.out.println("URL: " + url);
 
                     Elements links = document.select("a[href]");
                     for (Element link : links) {
@@ -159,8 +159,14 @@ public class CreepyCrawler {
                                     CreepyCrawler crawler = new CreepyCrawler(sednaURL);
                                     Set<String> pages = crawler.getVisitedPages();
 
+                                    InvertedIndex index = new InvertedIndex();
+                                    index.indexVisitedPages(pages);
+                                 
+
                                     System.out.println("Crawling " + sednaURL);
                                     printPages(pages);
+                                    System.out.println("Index of " + sednaURL);
+                                    index.printIndex();
                                 } catch (IOException | URISyntaxException e) {
                                     System.err.println("Error starting the crawl: " + e.getMessage());
                                 }
