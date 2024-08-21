@@ -1,8 +1,6 @@
 import java.net.URI;
 import java.util.Set;
 
-import org.junit.internal.Checks;
-
 
 /**
  * Handle checking whether a given url is valid
