@@ -1,6 +1,8 @@
 import java.net.URI;
 import java.util.Set;
 
+import org.junit.internal.Checks;
+
 
 /**
  * Handle checking whether a given url is valid
@@ -21,6 +23,7 @@ public class UrlRules {
     // creature rule to skip
     // Error accessing the URL: https://support.sedna.com/hc/en-us
     // Error accessing the URL: mailto:info@sedna.com
+    // Error accessing the URL: https://sedna.com/customer-stories/how-viterra-reduced-email-volume-by-95-with-sedna-team-collaboration-software/
 
 
     /**
