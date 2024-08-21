@@ -70,7 +70,6 @@ public class CreepyCrawler {
 
                 // Parse the URL to check its scheme
                 URI uri = new URI(url);
-                //String path = uri.getPath().toLowerCase();
 
                 // Connect to the URL and get the response
                 Connection connection = Jsoup.connect(url);
