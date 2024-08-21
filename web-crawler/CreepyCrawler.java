@@ -1,6 +1,8 @@
 import java.util.Scanner;
 import java.util.Set;
 
+import org.jsoup.Connection;
+
 //import javax.swing.text.Document;
 
 import org.jsoup.Jsoup;
@@ -29,6 +31,12 @@ public class CreepyCrawler {
     // robots.txt handler object
     private RobotsTextHandler roboTxtHandler;
 
+    // List of file extensions to exclude from crawling
+    private static final Set<String> EXCLUDED_EXTENSIONS = Set.of(
+            ".pdf", ".jpg", ".jpeg", ".png", ".gif", ".bmp",
+            ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx",
+            ".mp4", ".avi", ".mkv", ".mov", ".zip", ".rar");
+
     /**
      * Constructor to initialize the crawler with the start URL.
      * 
@@ -55,27 +63,55 @@ public class CreepyCrawler {
      */
     private void creep(String url) {
 
-        // Check if the page is allowed, if the page has been added to directory and if the url is in the domain
+        // Check if the page is allowed, if the page has been added to directory, if the
+        // url is a file and if the url is in the domain
         if (this.roboTxtHandler.isUrlAllowed(url) && !pages.contains(url) && url.contains(domain)) {
             try {
-                Document document = Jsoup.connect(url).get();
-                pages.add(url);
 
-                System.out.println("URL: " + url);
+                // Parse the URL to check its scheme
+                URI uri = new URI(url);
+                String scheme = uri.getScheme();
+                String path = uri.getPath().toLowerCase();
 
-                Elements links = document.select("a[href]");
-
-                for (Element link : links) {
-                    String absUrl = link.attr("abs:href");
-                    if (absUrl.contains(domain)) {
-                        creep(absUrl);
+                // Skip URLs that match excluded file extensions
+                for (String ext : EXCLUDED_EXTENSIONS) {
+                    if (path.endsWith(ext)) {
+                        // System.out.println("Skipping file URL: " + url);
+                        return;
                     }
                 }
 
-            } catch (Exception e) {
-                System.err.println("Error, cannot access: " + url);
-            }
+                // Skip URLs with the 'file' scheme or other invalid schemes
+                if (scheme == null || (!scheme.equals("http") && !scheme.equals("https"))) {
+                    // System.err.println("Skipping invalid URL: " + url);
+                    return;
+                }
 
+                // Connect to the URL and get the response
+                Connection connection = Jsoup.connect(url);
+                Connection.Response response = connection.execute();
+
+                // Check if the page is accessible (status code 200)
+                if (response.statusCode() == 200) {
+                    Document document = connection.get();
+                    pages.add(url);
+                    System.out.println("URL: " + url);
+
+                    Elements links = document.select("a[href]");
+                    for (Element link : links) {
+                        String absUrl = link.attr("abs:href");
+                        if (absUrl.contains(domain)) {
+                            creep(absUrl);
+                        }
+                    }
+                } else {
+                    return;
+                    // System.err.println("Error, cannot access: " + url + " (HTTP " +
+                    // response.statusCode() + ")");
+                }
+            } catch (IOException | URISyntaxException e) {
+                System.err.println("Error accessing the URL: " + url);
+            }
         }
     }
 
@@ -89,7 +125,7 @@ public class CreepyCrawler {
     }
 
     public static void printPages(Set<String> visitedPages) {
-        System.out.println("Crawled pages: "+ "\n");
+        System.out.println("Crawled pages: " + "\n");
         for (String page : visitedPages) {
             System.out.println(page);
         }
@@ -148,7 +184,7 @@ public class CreepyCrawler {
                             } else {
                                 System.out.println("Enter URL: ");
                                 String customURL = scanner.nextLine();
-                                
+
                                 try {
                                     // Create an instance of the WebCrawler and start crawling
                                     CreepyCrawler crawler = new CreepyCrawler(customURL);
