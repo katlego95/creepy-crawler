@@ -7,10 +7,6 @@ import org.junit.*;
 import java.net.URI;
 
 public class RobotsTextHandlerTest{
-    @Test
-    public void test() {
-        assert(true);
-    }
 
     @Test
     public void testIsAllowedURL() throws IOException, URISyntaxException {

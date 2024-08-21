@@ -8,10 +8,6 @@ import java.util.Set;
 import org.junit.*;
 
 public class CreepyCrawlerTest{
-    @Test
-    public void test() {
-assert(true);
-    }
 
     @Test
     public void testCrawlValidURL() throws IOException, URISyntaxException {
